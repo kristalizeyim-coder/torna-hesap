@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Yatay torna alyans hesaplama sistemi - boru iç çap, dış çap ve teknik resim hesaplama">
+    <title>Torna Hesap - Alyans Hesaplama Sistemi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="app-main">
+        <!-- Sol Panel: Girdiler ve Sonuçlar -->
+        <section class="panel input-panel" id="input-panel">
+            <div class="panel-header">
+                <h2>Hesaplama Parametreleri</h2>
+            </div>
+
+            <div class="panel-body">
+                <!-- Alyans Tipi Seçimi -->
+                <div class="type-selector">
+                    <label class="field-label">Alyans Tipi</label>
+                    <div class="type-buttons">
+                        <button class="type-btn active" data-type="normal" id="btn-type-normal">
+                            <span class="type-btn-icon">◎</span>
+                            Normal Alyans
+                        </button>
+                        <button class="type-btn" data-type="kademeli" id="btn-type-kademeli">
+                            <span class="type-btn-icon">◈</span>
+                            İki Kademeli Alyans
+                        </button>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- Ortak / Genel Girdiler -->
+                <div class="input-group">
+                    <label class="field-label" for="input-boy">Alyans Boyu (Beden)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="input-boy" value="60" min="1" max="100" step="1">
+                        <span class="input-suffix">boy</span>
+                    </div>
+                    <span class="input-hint" id="hint-boy">Normal: direkt beden | İki kademeli: 1 boy küçük (59) hesaplanır</span>
+                </div>
+
+                <!-- NORMAL ALYANS GİRDİLERİ -->
+                <div id="group-normal-inputs">
+                    <div class="input-group">
+                        <label class="field-label" for="input-ic-tolerans">İç Tolerans</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="input-ic-tolerans" value="50" min="0" max="500" step="1">
+                            <span class="input-suffix">μm</span>
+                        </div>
+                        <span class="input-hint">×2 uygulanarak çıkarılır</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="field-label" for="input-et-kalinligi">Et Kalınlığı</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="input-et-kalinligi" value="100" min="0" max="1000" step="1">
+                            <span class="input-suffix">μm</span>
+                        </div>
+                        <span class="input-hint">×2 uygulanarak eklenir</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="field-label" for="input-dis-tolerans">Dış Tolerans</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="input-dis-tolerans" value="50" min="0" max="500" step="1">
+                            <span class="input-suffix">μm</span>
+                        </div>
+                        <span class="input-hint">×2 uygulanarak eklenir</span>
+                    </div>
+                </div>
+
+                <!-- İKİ KADEMELİ ALYANS GİRDİLERİ -->
+                <div id="group-kademeli-inputs" class="hidden">
+                    <div class="section-subtitle">İÇ ALYANS (İç Parça)</div>
+                    
+                    <div class="input-group">
+                        <label class="field-label" for="input-ic-parca-tolerans">İç Tolerans</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="input-ic-parca-tolerans" value="50" min="0" max="500" step="1">
+                            <span class="input-suffix">μm</span>
+                        </div>
+                        <span class="input-hint">×2 uygulanarak 59 boy çaptan çıkarılır</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="field-label" for="input-ic-parca-et">İç Alyans Et Kalınlığı</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="input-ic-parca-et" value="100" min="0" max="1000" step="1">
+                            <span class="input-suffix">μm</span>
+                        </div>
+                        <span class="input-hint">×2 uygulanır</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="field-label" for="input-ic-parca-dis-tolerans">İç Alyans Dış Tolerans</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="input-ic-parca-dis-tolerans" value="50" min="0" max="500" step="1">
+                            <span class="input-suffix">μm</span>
+                        </div>
+                        <span class="input-hint">×2 uygulanır</span>
+                    </div>
+
+                    <div class="section-subtitle">DIŞ ALYANS (Dış Parça)</div>
+
+                    <div class="input-group">
+                        <label class="field-label" for="input-dis-parca-islem">Müşteri İşlem Payı</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="input-dis-parca-islem" value="10" min="0" max="500" step="1">
+                            <span class="input-suffix">μm</span>
+                        </div>
+                        <span class="input-hint">Dış iç çapından çıkarılır</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="field-label" for="input-dis-parca-giris">İç Yüzük Giriş Payı</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="input-dis-parca-giris" value="50" min="0" max="500" step="1">
+                            <span class="input-suffix">μm</span>
+                        </div>
+                        <span class="input-hint">×2 uygulanarak tam oturma için çıkarılır</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="field-label" for="input-dis-parca-et">Dış Alyans Et Kalınlığı</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="input-dis-parca-et" value="100" min="0" max="1000" step="1">
+                            <span class="input-suffix">μm</span>
+                        </div>
+                        <span class="input-hint">×2 uygulanır</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="field-label" for="input-dis-parca-tolerans">Dış Alyans Dış Tolerans</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="input-dis-parca-tolerans" value="50" min="0" max="500" step="1">
+                            <span class="input-suffix">μm</span>
+                        </div>
+                        <span class="input-hint">×2 uygulanır</span>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- Sonuçlar -->
+                <div class="results-section">
+                    <h3 class="section-title">Hesaplama Sonuçları</h3>
+
+                    <!-- NORMAL SONUÇLAR -->
+                    <div class="result-cards" id="normal-results">
+                        <div class="result-card">
+                            <div class="result-icon">⊘</div>
+                            <div class="result-info">
+                                <div class="result-label">İç Çap</div>
+                                <div class="result-value" id="result-ic-cap">—</div>
+                            </div>
+                            <div class="result-unit">mm</div>
+                        </div>
+
+                        <div class="result-card">
+                            <div class="result-icon">⊙</div>
+                            <div class="result-info">
+                                <div class="result-label">Dış Çap</div>
+                                <div class="result-value" id="result-dis-cap">—</div>
+                            </div>
+                            <div class="result-unit">mm</div>
+                        </div>
+
+                        <div class="result-card">
+                            <div class="result-icon">▤</div>
+                            <div class="result-info">
+                                <div class="result-label">Et Kalınlığı (tek taraf)</div>
+                                <div class="result-value" id="result-et-toplam">—</div>
+                            </div>
+                            <div class="result-unit">mm</div>
+                        </div>
+                    </div>
+
+                    <!-- İKİ KADEMELİ SONUÇLAR -->
+                    <div class="result-cards hidden" id="kademeli-results">
+                        <div class="results-group-title">İÇ ALYANS PARÇASI</div>
+                        <div class="result-card">
+                            <div class="result-icon">⊘</div>
+                            <div class="result-info">
+                                <div class="result-label" id="label-kademeli-ic-ic">İç Alyans İç Çap</div>
+                                <div class="result-value" id="result-kademeli-ic-ic">—</div>
+                            </div>
+                            <div class="result-unit">mm</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-icon">⊙</div>
+                            <div class="result-info">
+                                <div class="result-label">İç Alyans Dış Çap</div>
+                                <div class="result-value" id="result-kademeli-ic-dis">—</div>
+                            </div>
+                            <div class="result-unit">mm</div>
+                        </div>
+
+                        <div class="results-group-title" style="margin-top: 10px;">DIŞ ALYANS PARÇASI</div>
+                        <div class="result-card">
+                            <div class="result-icon">⊘</div>
+                            <div class="result-info">
+                                <div class="result-label">Dış Alyans İç Çap</div>
+                                <div class="result-value" id="result-kademeli-dis-ic">—</div>
+                            </div>
+                            <div class="result-unit">mm</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-icon">⊙</div>
+                            <div class="result-info">
+                                <div class="result-label">Dış Alyans Dış Çap</div>
+                                <div class="result-value" id="result-kademeli-dis-dis">—</div>
+                            </div>
+                            <div class="result-unit">mm</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- Formüller -->
+                <div class="formula-section">
+                    <h3 class="section-title">Formül Detayları</h3>
+                    <div class="formula-card">
+                        <div class="formula-label" id="formula-title-1">İç Çap Formülü</div>
+                        <div class="formula-text" id="formula-ic">—</div>
+                    </div>
+                    <div class="formula-card">
+                        <div class="formula-label" id="formula-title-2">Dış Çap Formülü</div>
+                        <div class="formula-text" id="formula-dis">—</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sağ Panel: Teknik Resim -->
+        <section class="panel drawing-panel" id="drawing-panel">
+            <div class="panel-header">
+                <h2>Teknik Resim (Koordinat Düzlemi)</h2>
+                <div class="drawing-controls">
+                    <button class="ctrl-btn" id="btn-zoom-in" title="Yakınlaştır">+</button>
+                    <button class="ctrl-btn" id="btn-zoom-reset" title="Sıfırla">⟲</button>
+                    <button class="ctrl-btn" id="btn-zoom-out" title="Uzaklaştır">-</button>
+                </div>
+            </div>
+            <div class="canvas-container" id="canvas-container">
+                <canvas id="technical-drawing"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <script src="drawing.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
